@@ -1,52 +1,47 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navLinkClass = ({ isActive }) =>
+    isActive
+      ? "text-purple-600 font-semibold border-b-2 border-purple-600 pb-0.5"
+      : "text-gray-600 hover:text-purple-600 font-medium transition duration-200";
 
   return (
     <>
       <nav className="bg-white shadow-md w-full fixed top-0 left-0">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link
+          <NavLink
             to="/"
             className="text-xl font-bold text-purple-600 tracking-wide flex gap-2"
           >
             <img src="/logo.jpeg" className="w-fit-content h-7 rounded-4xl" />
             OutfitAI
-          </Link>
+          </NavLink>
           <ul className="hidden md:flex items-center gap-8">
             <li>
-              <Link
-                to="/"
-                className="text-gray-600 hover:text-purple-600 font-medium transition duration-200"
-              >
+              <NavLink to="/" className={navLinkClass} end>
                 Home
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                to="/recommendations"
-                className="text-gray-600 hover:text-purple-600 font-medium transition duration-200"
-              >
+              <NavLink to="/recommendations" className={navLinkClass} end>
                 Recommendations
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
-                to="/login"
-                className="text-gray-600 hover:text-purple-600 font-medium transition duration-200"
-              >
+              <NavLink to="/login" className={navLinkClass} end>
                 Login
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
+              <NavLink
                 to="/register"
                 className="bg-purple-600 text-white px-5 py-2 rounded-full font-medium hover:bg-purple-700 transition duration-200"
               >
                 Get Started
-              </Link>
+              </NavLink>
             </li>
           </ul>
           {/* hamburger icon */}

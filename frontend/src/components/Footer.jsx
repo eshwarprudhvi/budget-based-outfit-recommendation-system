@@ -6,7 +6,7 @@ import { LuLinkedin } from "react-icons/lu";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f172a] text-white">
+    <footer className="bg-[#0f172a]  text-white">
       {/* MAIN CONTENT */}
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">

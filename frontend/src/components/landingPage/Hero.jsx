@@ -14,7 +14,7 @@ export default function Hero() {
       </p>
       <div className="flex flex-col sm:flex-row items-center gap-4">
         {/* Primary Button */}
-        <button className="bg-gradient-to-r from-purple-600 to-blue-500 cursor-pointer text-white px-7 py-3 rounded-lg font-semibold flex items-center gap-2 hover:opacity-90 transition duration-200 shadow-md w-full sm:w-auto justify-center">
+        <button className="bg-linear-to-r from-purple-600 to-blue-500 cursor-pointer text-white px-7 py-3 rounded-lg font-semibold flex items-center gap-2 hover:opacity-90 transition duration-200 shadow-md w-full sm:w-auto justify-center">
           Start Generating Outfits
           <span>→</span>
         </button>

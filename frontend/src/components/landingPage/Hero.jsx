@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="flex flex-col justify-center items-center bg-gray-100 w-full text-center px-4 pt-20 pb-16">
+    <section className="flex flex-col select-none justify-center items-center bg-gray-100 w-full text-center px-4 pt-20 pb-16">
       <div>
         <img src="/logo.jpeg" className="h-20 rounded-3xl" />
       </div>

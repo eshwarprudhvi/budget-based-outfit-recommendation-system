@@ -64,18 +64,18 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    //check if email doesnot exists
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      return res.status(400).json({ message: "User doesnot exists" });
-    }
 
-    const token = generateToken(user._id);
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+
+    const token = generateToken(user._id); // ← only after password verified
 
     res.status(200).json({
       message: "Login successful",

@@ -1,9 +1,22 @@
 import React, { useState } from "react";
-import { FaGithub } from "react-icons/fa";
 
+import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+
+import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
+
 export default function Register() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const { signInWithGoogle } = useGoogleAuth();
+  const [googleError, setGoogleError] = useState("");
+
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -13,26 +26,46 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.password || !form.confirm) {
+      return toast.error("All fields are required");
+    }
+    if (form.password.length < 6) {
+      return toast.error("Password must be at least 6 characters");
+    }
+    if (form.password !== form.confirm) {
+      return toast.error("Passwords do not match");
+    }
+
+    try {
+      setLoading(true);
+      const res = await registerUser(form);
+      toast.success(res.data.message || "Account created successfully");
+      login(res.data.user, res.data.token);
+      navigate("/recommendations");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleGoogleSignIn = async () => {
+    try {
+      setGoogleError("");
+      await signInWithGoogle();
+    } catch (error) {
+      setGoogleError("Google sign in failed. Please try again.");
+    }
+  };
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   return (
     <div className="min-h-screen bg-linear-to-b from-white via-blue-50 to-purple-50 flex flex-col items-center justify-center px-4 py-12">
       <div className="flex flex-col items-center text-center mb-6">
-        <div className="bg-linear-to-br from-purple-500 to-blue-500 p-4 rounded-2xl mb-4 shadow-lg">
-          <svg
-            className="w-8 h-8 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
-            />
-          </svg>
+        <div className="h-20 w-20">
+          <img src="/logo.jpeg" className="h-fit w-fit rounded-lg" />
         </div>
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           Create Account
@@ -257,8 +290,12 @@ export default function Register() {
         </div>
 
         {/* ALL FORM CONTENT GOES HERE */}
-        <button className="w-full mt-5 bg-linear-to-r cursor-pointer from-blue-400 to-purple-600 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition duration-200">
-          Create Account
+        <button
+          onClick={handleRegister}
+          disabled={loading}
+          className="w-full mt-5 bg-linear-to-r cursor-pointer from-blue-400 to-purple-600 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition duration-200"
+        >
+          {loading ? "Creating Account..." : "Create Account"}
         </button>
 
         {/* Divider */}
@@ -268,8 +305,18 @@ export default function Register() {
           <div className="flex-1 h-px bg-gray-200"></div>
         </div>
 
+        {/* Google Error */}
+        {googleError && (
+          <p className="text-red-500 text-sm text-center mt-2">{googleError}</p>
+        )}
+
+        {/* Google Button */}
+
         <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center gap-2 border cursor-pointer border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
+          <button
+            onClick={signInWithGoogle}
+            className="flex items-center justify-center gap-2 border cursor-pointer border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200"
+          >
             <FcGoogle className="h-6 w-6" /> Google
           </button>
           <button className="flex items-center justify-center gap-2 border cursor-pointer border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">

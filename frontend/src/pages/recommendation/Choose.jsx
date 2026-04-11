@@ -11,7 +11,7 @@ const paths = [
     description: 'Precision-tailored AI curation for the modern feminine silhouette, driven by your personal style preferences and precise budget.',
     descColor: 'text-gray-600',
     glassClass: 'bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl',
-    btnBg: 'bg-gradient-to-r from-[#7a2ff8] to-[#145de0]',
+    btnBg: 'bg-gradient-to-r from-pink-500 to-rose-400',
     btnText: 'text-white',
   },
   {
@@ -24,8 +24,8 @@ const paths = [
     description: 'Intelligent styling engine for menswear, generating the perfect look based entirely on your specific aesthetics and budget priorities.',
     descColor: 'text-gray-300',
     glassClass: 'bg-white/10 backdrop-blur-3xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]',
-    btnBg: 'bg-[#ffcaff]',
-    btnText: 'text-[#8b2bba]',
+    btnBg: 'bg-gradient-to-r from-[#7a2ff8] to-[#145de0]',
+    btnText: 'text-white',
   },
 ]
 
@@ -102,7 +102,7 @@ export default function Choose() {
                 </p>
 
                 <button 
-                  className={`w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-transform duration-300 hover:scale-[1.02] ${path.btnBg} ${path.btnText}`}
+                  className={`w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-transform duration-300 hover:scale-[1.02] ${path.btnBg} ${path.btnText} cursor-pointer`}
                 >
                   Enter Curator Lab
                   <svg className="w-5 h-5 ml-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,14 +118,7 @@ export default function Choose() {
         
       </div>
 
-      {/* ── FOOTER NOTE ── */}
-      <p className="relative z-10 mt-16 text-sm text-gray-500 font-medium flex items-center gap-3">
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
-        </span>
-        Powered by Next-Gen AI
-      </p>
+
     </div>
   )
 }

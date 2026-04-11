@@ -4,9 +4,11 @@ import { FcGoogle } from 'react-icons/fc'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginUser } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
+import { useGoogleAuth } from '../../hooks/useGoogleAuth'
 
 export default function Login() {
   const { login } = useAuth()
+  const { signInWithGoogle } = useGoogleAuth()
   const navigate = useNavigate()
 
   const [form, setForm] = useState({ email: '', password: '' })
@@ -157,7 +159,7 @@ export default function Login() {
 
         {/* SOCIAL BUTTONS */}
         <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
+          <button onClick={signInWithGoogle} className="flex items-center justify-center gap-2 border cursor-pointer border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
             <FcGoogle className="h-6 w-6" /> Google
           </button>
           <button className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">

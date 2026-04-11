@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 const ALL_COLORS = [
   { name: 'Black', bg: 'bg-black' },
   { name: 'White', bg: 'bg-white border border-gray-300' },
@@ -33,26 +34,26 @@ const ALL_COLORS = [
   { name: 'Rose', bg: 'bg-rose-500' },
 ]
 
-export default function MenPageSideBar({ onGenerate, loading }) {
+export default function WomenPageSideBar({ onGenerate, loading }) {
   const [isColorsExpanded, setIsColorsExpanded] = useState(false)
   const [form, setForm] = useState({
     budget: 5000,
-    gender: 'Male', // Pre-selected and fixed
+    gender: 'Female', // Pre-selected and fixed
     occasion: '',
     style: '',
     colors: [],
     prompt: '',
-    shirt: [],
-    pant: [],
+    tops: [],
+    bottoms: [],
     includes: {
       footwear: true,
+      jewelry: false,
+      bag: false,
       watch: false,
-      belt: false,
-      accessories: false,
     },
     priorities: {
-      shirt: 30,
-      pants: 30,
+      topwear: 30,
+      bottomwear: 30,
       shoes: 25,
       accessories: 15,
     }
@@ -69,7 +70,7 @@ export default function MenPageSideBar({ onGenerate, loading }) {
     // Map output exactly to backend schema
     const formattedData = {
       occasion: form.occasion.toLowerCase() || "",
-      gender: "men",
+      gender: "women",
       budget: form.budget,
       preferences: Object.keys(form.priorities).map(key => ({
         item: key,
@@ -78,8 +79,8 @@ export default function MenPageSideBar({ onGenerate, loading }) {
       colors: form.colors.map(color => color.toLowerCase()),
       optional_items: Object.keys(form.includes).filter(k => form.includes[k]),
       aesthetics: form.style,
-      topwear_preferences: form.shirt,
-      bottomwear_preferences: form.pant
+      topwear_preferences: form.tops,
+      bottomwear_preferences: form.bottoms
     };
 
     onGenerate(formattedData);
@@ -90,8 +91,8 @@ export default function MenPageSideBar({ onGenerate, loading }) {
       
       {/* HEADER SECTION */}
       <div className="border-b border-gray-100 pb-4">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
-          Menswear Curator
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
+          Womenswear Curator
         </h2>
         <p className="text-sm text-gray-500 font-medium mt-1">Set your preferences for the perfect fit.</p>
       </div>
@@ -104,9 +105,9 @@ export default function MenPageSideBar({ onGenerate, loading }) {
         <div className="flex">
           <button
             disabled
-            className="w-full py-2.5 rounded-xl text-sm font-bold border bg-blue-600 text-white border-blue-600 shadow-sm opacity-90 cursor-not-allowed flex justify-center items-center gap-2"
+            className="w-full py-2.5 rounded-xl text-sm font-bold border bg-pink-600 text-white border-pink-600 shadow-sm opacity-90 cursor-not-allowed flex justify-center items-center gap-2"
           >
-            Male <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+            Female <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
           </button>
         </div>
       </div>
@@ -124,9 +125,9 @@ export default function MenPageSideBar({ onGenerate, loading }) {
             step="500"
             value={form.budget}
             onChange={(e) => setForm({ ...form, budget: Number(e.target.value) })}
-            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-pink-600"
           />
-          <span className="bg-blue-50 text-blue-700 font-bold px-4 py-2 rounded-xl text-sm min-w-[90px] text-center border border-blue-100">
+          <span className="bg-pink-50 text-pink-700 font-bold px-4 py-2 rounded-xl text-sm min-w-[90px] text-center border border-pink-100">
             ₹{form.budget.toLocaleString()}
           </span>
         </div>
@@ -142,14 +143,14 @@ export default function MenPageSideBar({ onGenerate, loading }) {
           🎯 Occasion
         </label>
         <div className="grid grid-cols-3 gap-2">
-          {['Casual', 'Formal', 'Business', 'Wedding', 'Party', 'Sports',"Traditional","Interview"].map((o) => (
+          {['Casual', 'Formal', 'Business', 'Wedding', 'Party', 'Date Night', "Traditional", "Brunch", "Cocktail"].map((o) => (
             <button
               key={o}
               onClick={() => setForm({ ...form, occasion: o })}
               className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border cursor-pointer
                 ${form.occasion === o
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                  ? 'bg-pink-600 text-white border-pink-600 shadow-md shadow-pink-200'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'
                 }`}
             >
               {o}
@@ -164,14 +165,14 @@ export default function MenPageSideBar({ onGenerate, loading }) {
           🎨 Aesthetic
         </label>
         <div className="grid grid-cols-3 gap-2">
-          {['Minimalist', 'Streetwear', 'Classic', 'Old Money', 'Sporty', 'Trendy','Vintage','Luxury','Indo-Western '].map((s) => (
+          {['Chic', 'Elegant', 'Classic', 'Boho', 'Sporty', 'Trendy', 'Vintage', 'Luxury', 'Indo-Western '].map((s) => (
             <button
               key={s}
               onClick={() => setForm({ ...form, style: s })}
               className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border cursor-pointer
                 ${form.style === s
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
+                  ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-200'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-rose-300 hover:bg-rose-50'
                 }`}
             >
               {s}
@@ -188,7 +189,7 @@ export default function MenPageSideBar({ onGenerate, loading }) {
           </label>
           <button
             onClick={() => setIsColorsExpanded(!isColorsExpanded)}
-            className="text-xs font-semibold text-blue-600 hover:text-blue-800 cursor-pointer"
+            className="text-xs font-semibold text-rose-600 hover:text-rose-800 cursor-pointer"
           >
             {isColorsExpanded ? 'View Less' : 'View All'}
           </button>
@@ -208,8 +209,8 @@ export default function MenPageSideBar({ onGenerate, loading }) {
               }}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold border transition-all duration-200 cursor-pointer
                 ${form.colors.includes(color.name)
-                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm'
-                  : 'border-gray-200 text-gray-600 bg-white hover:border-indigo-300 hover:bg-gray-50'
+                  ? 'border-rose-600 bg-rose-50 text-rose-700 shadow-sm'
+                  : 'border-gray-200 text-gray-600 bg-white hover:border-rose-300 hover:bg-gray-50'
                 }`}
             >
               <span className={`w-3.5 h-3.5 rounded-full shadow-inner ${color.bg}`}></span>
@@ -227,28 +228,28 @@ export default function MenPageSideBar({ onGenerate, loading }) {
         </div>
       </div>
 
-      {/* SHIRT */}
+      {/* TOPS */}
       <div>
         <label className="text-sm font-bold text-gray-800 block mb-3">
-          👕 Topwear Preferences(Optional)
+          👚 Topwear Preferences (Optional)
         </label>
         <div className="grid grid-cols-3 gap-2">
-          {['T-Shirt', 'Polo', 'Casual Shirt', 'Dress Shirt', 'Hoodie', 'Sweater'].map((o) => (
+          {['T-Shirt', 'Blouse', 'Crop Top', 'Dress', 'Sweater', 'Tank Top', 'Kurti'].map((o) => (
             <button
               key={o}
               onClick={() => {
-                const already = form.shirt.includes(o)
+                const already = form.tops.includes(o)
                 setForm({
                   ...form,
-                  shirt: already
-                    ? form.shirt.filter(item => item !== o)
-                    : [...form.shirt, o]
+                  tops: already
+                    ? form.tops.filter(item => item !== o)
+                    : [...form.tops, o]
                 })
               }}
               className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border cursor-pointer
-                ${form.shirt.includes(o)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                ${form.tops.includes(o)
+                  ? 'bg-pink-600 text-white border-pink-600 shadow-md shadow-pink-200'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'
                 }`}
             >
               {o}
@@ -257,28 +258,28 @@ export default function MenPageSideBar({ onGenerate, loading }) {
         </div>
       </div>
 
-      {/* PANT */}
+      {/* BOTTOMS */}
       <div>
         <label className="text-sm font-bold text-gray-800 block mb-3">
-          👖 Bottomwear Preferences(Optional)
+          👗 Bottomwear Preferences (Optional)
         </label>
         <div className="grid grid-cols-3 gap-2">
-          {['Jeans', 'Chinos', 'Trousers', 'Shorts', 'Joggers', 'Cargo'].map((o) => (
+          {['Jeans', 'Trousers', 'Skirt', 'Shorts', 'Leggings', 'Palazzos'].map((o) => (
             <button
               key={o}
               onClick={() => {
-                const already = form.pant.includes(o)
+                const already = form.bottoms.includes(o)
                 setForm({
                   ...form,
-                  pant: already
-                    ? form.pant.filter(item => item !== o)
-                    : [...form.pant, o]
+                  bottoms: already
+                    ? form.bottoms.filter(item => item !== o)
+                    : [...form.bottoms, o]
                 })
               }}
               className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 border cursor-pointer
-                ${form.pant.includes(o)
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                ${form.bottoms.includes(o)
+                  ? 'bg-pink-600 text-white border-pink-600 shadow-md shadow-pink-200'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:bg-pink-50'
                 }`}
             >
               {o}
@@ -306,10 +307,10 @@ export default function MenPageSideBar({ onGenerate, loading }) {
                <div key={key}>
                  <div className="flex items-center justify-between mb-2 text-xs font-bold text-gray-700 capitalize">
                    <span className="flex items-center gap-2">
-                     <span className={`w-2 h-2 rounded-full ${form.priorities[key] > 0 ? 'bg-indigo-500' : 'bg-gray-300'}`}></span>
-                     {key === 'pants' ? 'Bottomwear' : key === 'shoes' ? 'Footwear' : key} 
+                     <span className={`w-2 h-2 rounded-full ${form.priorities[key] > 0 ? 'bg-rose-500' : 'bg-gray-300'}`}></span>
+                     {key === 'bottomwear' ? 'Bottomwear' : key === 'shoes' ? 'Footwear' : key} 
                    </span>
-                   <span className="text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
+                   <span className="text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md">
                      {form.priorities[key]}%
                    </span>
                  </div>
@@ -326,7 +327,7 @@ export default function MenPageSideBar({ onGenerate, loading }) {
                          priorities: { ...form.priorities, [key]: val }
                        })
                    }}
-                   className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                   className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-rose-600"
                  />
                  <div className="flex justify-between mt-1 text-[10px] text-gray-400 font-semibold px-0.5">
                    <span>0%</span>
@@ -351,7 +352,7 @@ export default function MenPageSideBar({ onGenerate, loading }) {
       {/* INCLUDES */}
       <div>
         <label className="text-sm font-bold text-gray-800 block mb-3">
-          ⌚ Must Include
+          ✨ Must Include
         </label>
         <div className="grid grid-cols-2 gap-2">
           {Object.keys(form.includes).map((item) => (
@@ -363,7 +364,7 @@ export default function MenPageSideBar({ onGenerate, loading }) {
               })}
               className={`py-2 px-4 rounded-xl text-sm font-bold border transition-all duration-200 capitalize flex justify-between items-center cursor-pointer
                 ${form.includes[item]
-                  ? 'bg-blue-50 text-blue-700 border-blue-300'
+                  ? 'bg-pink-50 text-pink-700 border-pink-300'
                   : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
                 }`}
             >
@@ -378,13 +379,11 @@ export default function MenPageSideBar({ onGenerate, loading }) {
         </div>
       </div>
 
-
-
       {/* GENERATE BUTTON */}
       <button
         onClick={handleGenerateClick}
         disabled={loading}
-        className="w-full mt-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-bold text-base hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+        className="w-full mt-auto bg-gradient-to-r from-pink-600 to-rose-600 text-white py-4 rounded-2xl font-bold text-base hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {loading ? (
           <>
@@ -399,7 +398,7 @@ export default function MenPageSideBar({ onGenerate, loading }) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
             </svg>
-            Curate Menswear Outfit
+            Curate Womenswear Outfit
           </>
         )}
       </button>

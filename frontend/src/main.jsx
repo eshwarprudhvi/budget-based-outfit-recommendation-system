@@ -10,6 +10,7 @@ import Login from "./pages/AuthPages/Login.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import Recommendations from './pages/Recommendations.jsx'
 import Choose from './pages/recommendation/Choose.jsx'
+import Men from './pages/recommendation/Men.jsx'
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -20,7 +21,7 @@ createRoot(document.getElementById("root")).render(
           <Route index element={<Home />}></Route>
           <Route path="/recommendations" element={<Choose />} />
           <Route path="/recommendations/girls" element={<Recommendations />} />
-          <Route path="/recommendations/boys" element={<Recommendations />} />
+          <Route path="/recommendations/boys" element={<Men />} />
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
         </Route>

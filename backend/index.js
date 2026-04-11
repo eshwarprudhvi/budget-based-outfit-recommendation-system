@@ -17,7 +17,7 @@ connectDB();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://eshwarprudhvi-budget-based-ai-outfi.vercel.app/"],
+    origin: ["http://localhost:5173", "https://eshwarprudhvi-budget-based-ai-outfit-generator-2-c55fenziq.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

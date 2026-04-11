@@ -12,6 +12,7 @@ import Recommendations from './pages/Recommendations.jsx'
 import Choose from './pages/recommendation/Choose.jsx'
 import Men from './pages/recommendation/Men.jsx'
 import Women from './pages/recommendation/Women.jsx'
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -20,9 +21,9 @@ createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />}></Route>
-          <Route path="/recommendations" element={<Choose />} />
-          <Route path="/recommendations/girls" element={<Women />} />
-          <Route path="/recommendations/boys" element={<Men />} />
+          <Route path="/recommendations" element={<ProtectedRoute><Choose /></ProtectedRoute>} />
+          <Route path="/recommendations/girls" element={<ProtectedRoute><Women /></ProtectedRoute>} />
+          <Route path="/recommendations/boys" element={<ProtectedRoute><Men /></ProtectedRoute>} />
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
         </Route>

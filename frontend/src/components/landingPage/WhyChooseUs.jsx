@@ -131,7 +131,7 @@ function WhyChooseUs() {
             Why Choose Our AI Outfit Generator?
           </h2>
           <p className="text-gray-500 text-base md:text-lg">
-            Powered by sophisticated machine learning algorithms
+           Recommned outfit based on your budget & preferences
           </p>
         </div>
         {/* CARDS GRID */}

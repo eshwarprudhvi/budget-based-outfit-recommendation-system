@@ -89,10 +89,10 @@ export default function PoweredSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Powered by Advanced ML
+            Powered by Advanced AI
           </h2>
           <p className="text-gray-500 text-base md:text-lg">
-            Our recommendation engine uses sophisticated algorithms
+            Our recommendation system uses advanced AI usage to provide you with the best outfit recommendations.
           </p>
         </div>
         {/* CARDS GRID */}

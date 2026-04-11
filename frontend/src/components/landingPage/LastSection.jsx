@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LastSection() {
+  const navigate = useNavigate();
   return (
     <div className="bg-linear-to-r from-purple-600 to-blue-500 py-16 px-4 mb-10">
       <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
@@ -11,7 +13,10 @@ export default function LastSection() {
           Join thousands of users who are already using AI to create perfect
           outfits
         </p>
-        <button className="border-2 border-white cursor-pointer text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-purple-600 transition duration-200">
+        <button 
+          onClick={() => navigate('/recommendations')}
+          className="border-2 border-white cursor-pointer text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 hover:bg-white hover:text-purple-600 transition duration-200"
+        >
           Start Generating Outfits Now
           <span>→</span>
         </button>

@@ -49,7 +49,7 @@ export const generateOutfit = async (req, res) => {
       outfits: finalResults
     });
 
-    res.status(200).json({ success: true, outfits });
+
   } catch (error) {
     console.error("Recommendation error:", error.message);
     res.status(500).json({ success: false, message: error.message });

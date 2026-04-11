@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Hero() {
+  const navigate = useNavigate();
   return (
     <section className="flex flex-col select-none justify-center items-center bg-gray-100 w-full text-center px-4 pt-20 pb-16">
       <div>
@@ -14,13 +17,19 @@ export default function Hero() {
       </p>
       <div className="flex flex-col sm:flex-row items-center gap-4">
         {/* Primary Button */}
-        <button className="bg-linear-to-r from-purple-600 to-blue-500 cursor-pointer text-white px-7 py-3 rounded-lg font-semibold flex items-center gap-2 hover:opacity-90 transition duration-200 shadow-md w-full sm:w-auto justify-center">
+        <button 
+          onClick={() => navigate('/recommendations')}
+          className="bg-linear-to-r from-purple-600 to-blue-500 cursor-pointer text-white px-7 py-3 rounded-lg font-semibold flex items-center gap-2 hover:opacity-90 transition duration-200 shadow-md w-full sm:w-auto justify-center"
+        >
           Start Generating Outfits
           <span>→</span>
         </button>
 
         {/* Secondary Button */}
-        <button className="border border-gray-300 text-gray-700 px-7 py-3 cursor-pointer rounded-lg font-semibold hover:bg-gray-50 transition duration-200 w-full sm:w-auto">
+        <button 
+          onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+          className="border border-gray-300 text-gray-700 px-7 py-3 cursor-pointer rounded-lg font-semibold hover:bg-gray-50 transition duration-200 w-full sm:w-auto"
+        >
           Learn More
         </button>
       </div>

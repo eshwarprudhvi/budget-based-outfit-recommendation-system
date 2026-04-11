@@ -16,6 +16,9 @@ ${data.colors?.length ? JSON.stringify(data.colors) : "None"}
 - Optional Items Allowed:
 ${data.optional_items?.length ? JSON.stringify(data.optional_items) : "None"}
 
+- Aesthetic:
+${data.aesthetic || "None"}
+
 Weight Definition:
 - "weight" represents the relative importance of each item.
 - Higher weight means:
@@ -54,8 +57,11 @@ Your Task:
 Generate multiple outfit options using weighted preferences and contextual styling.
 
 Instructions:
+
 1. Generate between 1 to 5 outfit options.
+
 2. EACH outfit must independently follow ALL rules.
+
 3. Each outfit must:
    - Include all preferred items
    - If only one item is provided in preferences, generate only that item
@@ -71,31 +77,42 @@ Instructions:
      - NOT break proportional allocation of preferred items
    - Remaining budget = total budget − sum of preferred item allocations
 
-5. Outfit Variation Rules (STRICT):
-   - Each outfit MUST represent a clearly different style archetype
-   - Avoid generating visually or structurally similar outfits
-   - Use distinct styles such as:
-     - minimal
-     - bold
-     - smart casual
-     - sporty
-     - ethnic (if applicable)
-   - If duplication occurs, it must be a COMPLETE outfit duplicate (top-to-bottom identical), not partial variation
+5. Aesthetic Styling Rules:
+   - If an aesthetic is provided:
+     - STRICTLY align outfit style, item types, and overall vibe with the aesthetic
+     - Examples:
+       - Chic → clean, polished, minimal elegance
+       - Elegant → refined, sophisticated, premium look
+       - Classic → timeless, neutral, simple combinations
+       - Boho → relaxed, earthy, layered, textured
+   - Aesthetic should influence:
+     - clothing type
+     - styling level (formal / relaxed)
+     - outfit harmony
+   - If no aesthetic is provided:
+     - fall back to occasion-based styling
 
-6. Based on the occasion and gender:
+6. Outfit Variation Rules (STRICT):
+   - Each outfit MUST represent a clearly different style archetype
+   - If aesthetic is provided:
+     - variations must stay within the aesthetic but differ in execution
+   - Avoid generating visually or structurally similar outfits
+   - If duplication occurs, it must be a COMPLETE outfit duplicate
+
+7. Based on the occasion and gender:
    - choose appropriate clothing styles
    - refine item types if needed (e.g., blazer instead of jacket for formal)
 
-7. Color Assignment Logic:
+8. Color Assignment Logic:
    - If color preferences are provided:
      - STRICTLY use those colors
    - If color preferences are NOT provided:
-     - intelligently select colors based on:
-       - occasion
-       - gender
+     - choose colors based on:
+       - aesthetic (PRIMARY)
+       - occasion (SECONDARY)
        - outfit coordination
 
-8. Keep all items realistic and commonly available online.
+9. Keep all items realistic and commonly available online.
 
 Search Query Rules (VERY STRICT):
 
@@ -111,20 +128,26 @@ Search Query Rules (VERY STRICT):
 
 2. Include "occasion" ONLY if it meaningfully improves the query.
 
-3. Include "style" ONLY if it is clearly defined and relevant.
+3. Include "aesthetic" or "style" ONLY if it improves relevance.
 
-4. If both style and occasion are missing or not useful:
+4. If aesthetic, style, and occasion are not useful:
    - DO NOT force them
-   - Keep the query clean and natural
+   - keep the query clean
 
 5. Final query must follow one of these valid patterns:
 
+- "<color> <aesthetic> <style> <item> for <gender> <occasion> under <price>"
+- "<color> <aesthetic> <item> for <gender> <occasion> under <price>"
 - "<color> <style> <item> for <gender> <occasion> under <price>"
-- "<color> <item> for <gender> <occasion> under <price>"
-- "<color> <style> <item> for <gender> under <price>"
+- "<color> <aesthetic> <item> for <gender> under <price>"
 - "<color> <item> for <gender> under <price>"
 
-6. Queries must:
+6. Query Construction Notes:
+   - Aesthetic examples: chic, elegant, classic, boho
+   - Do NOT overload keywords
+   - Keep queries realistic and natural
+
+7. Queries must:
    - be concise
    - avoid filler words ("nice", "best", etc.)
    - resemble real user search behavior on e-commerce platforms

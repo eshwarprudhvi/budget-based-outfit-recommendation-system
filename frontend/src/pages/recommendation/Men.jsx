@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import MenPageSideBar from '../../components/recommendation/MenPageSideBar'
+import { getRecommendations } from '../../services/api'
+import toast from 'react-hot-toast'
 
 export default function Men() {
   const [loading, setLoading] = useState(false)
@@ -11,14 +13,26 @@ export default function Men() {
       return
     }
     
-    setLoading(true)
-    setResults(null)
+    try {
+      setLoading(true)
+      setResults(null)
 
-    // Placeholder - will connect to ML service later
-    setTimeout(() => {
-      setResults(formData)
+      const res = await getRecommendations(formData)
+      if (res.data && res.data.outfits) {
+        setResults({
+          meta: formData,
+          outfits: res.data.outfits,
+        })
+        toast.success("Outfits generated successfully!")
+      } else {
+        toast.error("Generation failed or invalid format.")
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error(error.response?.data?.message || "Error generating outfits.")
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   return (
@@ -82,18 +96,50 @@ export default function Men() {
                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900">Curated Outfit Ready</h3>
-                    <p className="text-gray-500 font-medium mt-1">Based on {results.occasion} • {results.aesthetics} • ₹{results.budget.toLocaleString()}</p>
+                    <p className="text-gray-500 font-medium mt-1">Based on {results.meta.occasion} • {results.meta.aesthetics} • ₹{results.meta.budget.toLocaleString()}</p>
                   </div>
                   <span className="px-4 py-2 bg-green-50 text-green-700 font-bold rounded-xl border border-green-200 text-sm">
                     100% Match
                   </span>
                 </div>
                 
-                {/* Placeholder Results View */}
-                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-inner flex-1 overflow-auto">
-                   <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
-                     {JSON.stringify(results, null, 2)}
-                   </pre>
+                {/* Results Display */}
+                <div className="bg-transparent flex-1 overflow-auto space-y-8 pb-10">
+                  {results.outfits.map((outfit, index) => (
+                    <div key={index} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                      <h4 className="text-xl font-extrabold text-gray-800 mb-5 flex items-center gap-2">
+                        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-sm">Look {outfit.outfit_id}</span>
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {outfit.items.map((item, iIndex) => (
+                          <div key={iIndex} className="bg-gray-50 p-4 rounded-2xl border border-gray-100 hover:border-blue-200 transition-colors">
+                            <p className="font-bold text-gray-900 text-sm mb-3">
+                              {item.item_name || item.search_query || "Clothing Item"}
+                            </p>
+                            <div className="flex flex-col gap-3">
+                              {item.products && item.products.length > 0 ? (
+                                item.products.slice(0, 2).map((prod, pIndex) => (
+                                  <a key={pIndex} href={prod.link} target="_blank" rel="noreferrer" className="flex items-start gap-4 bg-white p-3 rounded-xl border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
+                                    {prod.image ? (
+                                       <img src={prod.image} alt="Product" className="w-16 h-16 object-cover rounded-lg bg-gray-100" />
+                                    ) : (
+                                       <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-xl">🛒</div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs font-semibold text-gray-800 line-clamp-2 leading-snug">{prod.title}</p>
+                                      <p className="text-blue-600 font-bold mt-1.5 text-sm">{prod.price}</p>
+                                    </div>
+                                  </a>
+                                ))
+                              ) : (
+                                <p className="text-xs text-gray-400 italic">No products matched automatically.</p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

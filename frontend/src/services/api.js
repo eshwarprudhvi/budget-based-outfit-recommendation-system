@@ -16,5 +16,6 @@ export const registerUser = (data) => API.post("/auth/register", data);
 export const loginUser = (data) => API.post("/auth/login", data);
 export const getMe = () => API.get("/auth/me");
 export const googleLogin = (data) => API.post("/auth/google", data);
+export const getRecommendations = (data) => API.post("/recommend", data);
 
 export default API;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginUser } from '../../services/api'
@@ -158,12 +157,9 @@ export default function Login() {
         </div>
 
         {/* SOCIAL BUTTONS */}
-        <div className="grid grid-cols-2 gap-3">
-          <button onClick={signInWithGoogle} className="flex items-center justify-center gap-2 border cursor-pointer border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
+        <div className="flex flex-col gap-3">
+          <button onClick={signInWithGoogle} className="flex w-full items-center justify-center gap-2 border cursor-pointer border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
             <FcGoogle className="h-6 w-6" /> Google
-          </button>
-          <button className="flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200">
-            <FaGithub className="h-6 w-6" /> Github
           </button>
         </div>
 

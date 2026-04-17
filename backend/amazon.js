@@ -1,7 +1,8 @@
-import { chromium } from "playwright";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 /**
- * Search Amazon products
+ * Search Amazon products using axios + cheerio (no browser needed)
  * @param {string} query
  * @returns {Array}
  */
@@ -12,52 +13,44 @@ export async function searchAmazon(query) {
 
   const results = [];
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-
-  // mimic real user
-  await page.setExtraHTTPHeaders({
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36"
-  });
-
   try {
-    await page.goto(url, { timeout: 30000 });
-
-    await page.waitForSelector("div.s-main-slot div[data-asin]", {
-      timeout: 15000
+    const { data: html } = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      },
+      timeout: 15000,
     });
 
-    const cards = await page.$$("div.s-main-slot div[data-asin]");
+    const $ = cheerio.load(html);
 
-    for (let i = 0; i < Math.min(cards.length, 10); i++) {
-      const card = cards[i];
+    const cards = $("div.s-main-slot div[data-asin]");
 
-      try {
-        const title = await card.$eval("h2 span", el => el.innerText).catch(() => null);
-        const price = await card.$eval(".a-price-whole", el => el.innerText).catch(() => null);
-        const image = await card.$eval("img.s-image", el => el.src).catch(() => null);
-        const link = await card.$eval("a.a-link-normal", el => el.getAttribute("href")).catch(() => null);
+    cards.each((i, el) => {
+      if (i >= 10) return false; // limit to 10 results
 
-        if (title) {
-          results.push({
-            title,
-            price: price ? `₹${price}` : "N/A",
-            image: image || "N/A",
-            link: link ? `https://www.amazon.in${link}` : ""
-          });
-        }
+      const card = $(el);
 
-      } catch (err) {
-        continue;
+      const title = card.find("h2 span").text().trim() || null;
+      const price = card.find(".a-price-whole").first().text().trim() || null;
+      const image = card.find("img.s-image").attr("src") || null;
+      const link = card.find("a.a-link-normal").attr("href") || null;
+
+      if (title) {
+        results.push({
+          title,
+          price: price ? `₹${price}` : "N/A",
+          image: image || "N/A",
+          link: link ? `https://www.amazon.in${link}` : "",
+        });
       }
-    }
-
+    });
   } catch (err) {
     console.error("Scraping error:", err.message);
   }
-
-  await browser.close();
 
   return results;
 }

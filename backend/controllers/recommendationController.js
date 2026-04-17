@@ -20,17 +20,20 @@ export const generateOutfit = async (req, res) => {
       return res.status(200).json({ success: true, raw_output: cleaned });
     }
 
-    // 🔥 AMAZON INTEGRATION — Parallel scraping for speed
+    // 🔥 AMAZON INTEGRATION — Staggered parallel scraping
     // Step 1: Collect all unique search queries across all outfits
     const uniqueQueries = [
       ...new Set(outfits.flatMap((o) => o.items.map((i) => i.search_query))),
     ];
 
-    console.log(`🚀 Firing ${uniqueQueries.length} Amazon searches in parallel...`);
+    console.log(`🚀 Firing ${uniqueQueries.length} Amazon searches (staggered)...`);
 
-    // Step 2: Run ALL searches simultaneously
+    // Step 2: Stagger requests by 300ms each to avoid Amazon bot detection
+    // e.g. 8 queries → query 0 fires at 0ms, query 7 fires at 2100ms
+    // Still ~3x faster than fully sequential (no waiting for each response)
+    const STAGGER_MS = 300;
     const searchResults = await Promise.all(
-      uniqueQueries.map((query) => searchAmazon(query))
+      uniqueQueries.map((query, i) => searchAmazon(query, i * STAGGER_MS))
     );
 
     // Step 3: Build a cache map from query → results

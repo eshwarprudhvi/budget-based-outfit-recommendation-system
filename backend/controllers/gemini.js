@@ -8,7 +8,7 @@ export const callGeminiWithBuilder = async (data) => {
   const prompt = buildPrompt(data);
 
   const response = await client.models.generateContent({
-    model: 'gemini-3.0-flash',
+    model: 'gemini-3-flash-preview',
     contents: prompt,
   });
 

@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "dev": "node index.js"
- 
+    "dev": "node index.js",
+    "postinstall": "node node_modules/playwright/cli.js install --with-deps chromium"
   },
   "keywords": [],
   "author": "",

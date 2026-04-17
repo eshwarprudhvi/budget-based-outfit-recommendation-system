@@ -1,7 +1,5 @@
 import { callGeminiWithBuilder } from "./gemini.js";
-
 import { searchAmazon } from "../amazon.js";
-
 
 /**
  * POST /api/recommend
@@ -22,33 +20,41 @@ export const generateOutfit = async (req, res) => {
       return res.status(200).json({ success: true, raw_output: cleaned });
     }
 
-     // 🔥 AMAZON INTEGRATION STARTS HERE
+    // 🔥 AMAZON INTEGRATION
     const finalResults = [];
+    const searchCache = new Map(); // avoid duplicate searches
 
     for (const outfit of outfits) {
       const itemsWithProducts = [];
 
       for (const item of outfit.items) {
-        console.log(`🔍 Searching Amazon for: ${item.search_query}`);
+        const query = item.search_query;
+        let products;
 
-        const products = await searchAmazon(item.search_query);
+        if (searchCache.has(query)) {
+          products = searchCache.get(query); // reuse cached result
+        } else {
+          console.log(`🔍 Searching Amazon for: ${query}`);
+          products = await searchAmazon(query);
+          searchCache.set(query, products); // cache it
+        }
 
         itemsWithProducts.push({
           ...item,
-          products: products.slice(0, 3) // top 3
+          products: products.slice(0, 3), // top 3
         });
       }
 
       finalResults.push({
         outfit_id: outfit.outfit_id,
-        items: itemsWithProducts
+        items: itemsWithProducts,
       });
     }
-     res.status(200).json({
-      success: true,
-      outfits: finalResults
-    });
 
+    res.status(200).json({
+      success: true,
+      outfits: finalResults,
+    });
 
   } catch (error) {
     console.error("Recommendation error:", error.message);

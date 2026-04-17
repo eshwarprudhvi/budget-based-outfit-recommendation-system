@@ -21,14 +21,14 @@ export async function searchAmazon(query) {
         Accept:
           "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
       },
-      timeout: 15000,
+      timeout: 8000,
     });
 
     const $ = cheerio.load(html);
     const cards = $("div.s-main-slot div[data-asin]");
 
     cards.each((i, el) => {
-      if (i >= 10) return false;
+      if (i >= 5) return false; // only need top 5 (we slice to 3 later)
       const card = $(el);
       const title = card.find("h2 span").text().trim() || null;
       const price = card.find(".a-price-whole").first().text().trim() || null;

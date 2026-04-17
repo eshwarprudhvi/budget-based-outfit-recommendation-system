@@ -20,36 +20,32 @@ export const generateOutfit = async (req, res) => {
       return res.status(200).json({ success: true, raw_output: cleaned });
     }
 
-    // 🔥 AMAZON INTEGRATION
-    const finalResults = [];
-    const searchCache = new Map(); // avoid duplicate searches
+    // 🔥 AMAZON INTEGRATION — Parallel scraping for speed
+    // Step 1: Collect all unique search queries across all outfits
+    const uniqueQueries = [
+      ...new Set(outfits.flatMap((o) => o.items.map((i) => i.search_query))),
+    ];
 
-    for (const outfit of outfits) {
-      const itemsWithProducts = [];
+    console.log(`🚀 Firing ${uniqueQueries.length} Amazon searches in parallel...`);
 
-      for (const item of outfit.items) {
-        const query = item.search_query;
-        let products;
+    // Step 2: Run ALL searches simultaneously
+    const searchResults = await Promise.all(
+      uniqueQueries.map((query) => searchAmazon(query))
+    );
 
-        if (searchCache.has(query)) {
-          products = searchCache.get(query); // reuse cached result
-        } else {
-          console.log(`🔍 Searching Amazon for: ${query}`);
-          products = await searchAmazon(query);
-          searchCache.set(query, products); // cache it
-        }
+    // Step 3: Build a cache map from query → results
+    const searchCache = new Map(
+      uniqueQueries.map((query, i) => [query, searchResults[i]])
+    );
 
-        itemsWithProducts.push({
-          ...item,
-          products: products.slice(0, 3), // top 3
-        });
-      }
-
-      finalResults.push({
-        outfit_id: outfit.outfit_id,
-        items: itemsWithProducts,
-      });
-    }
+    // Step 4: Assemble final results using cached data
+    const finalResults = outfits.map((outfit) => ({
+      outfit_id: outfit.outfit_id,
+      items: outfit.items.map((item) => ({
+        ...item,
+        products: (searchCache.get(item.search_query) || []).slice(0, 3),
+      })),
+    }));
 
     res.status(200).json({
       success: true,
